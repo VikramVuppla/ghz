@@ -10,6 +10,9 @@ import (
 	"text/template"
 	"text/template/parse"
 	"time"
+	"fmt"
+  "log"
+  "os"
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/google/uuid"
@@ -219,6 +222,18 @@ func (td *CallData) executeMetadata(metadata string) (map[string]string, error) 
 
 func newUUID() string {
 	newUUID, _ := uuid.NewRandom()
+	// Open the file in append mode or create it if it doesn't exist
+  	file, err := os.OpenFile("/tmp/temp.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+  	if err != nil {
+  		log.Fatal(err)
+  	}
+  	defer file.Close()
+  
+  	// Append the UUID to the file
+  	_, err = fmt.Fprintln(file, newUUID)
+  	if err != nil {
+  		log.Fatal(err)
+  	}
 	return newUUID.String()
 }
 
